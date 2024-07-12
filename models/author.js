@@ -28,6 +28,7 @@ AuthorSchema.virtual("url").get(function () {
   return `/catalog/author/${this._id}`;
 });
 
+// Virtual for lifespan
 AuthorSchema.virtual("lifespan").get(function () {
   let dob = new Date(this.date_of_birth);
   let dod = new Date(this.date_of_death);
@@ -44,6 +45,27 @@ AuthorSchema.virtual("lifespan").get(function () {
   const yearsDiff = Math.round(diffInMs / (1000 * 60 * 60 * 24 * 365.25));
 
   return yearsDiff;
+});
+
+// virtual for author DOB
+AuthorSchema.virtual("formatDOB").get(function () {
+  if (isNaN(this.date_of_birth)) {
+    return "";
+  }
+  return DateTime.fromJSDate(this.date_of_birth).toLocaleString(
+    DateTime.DATE_MED
+  );
+});
+
+// virtual for author DOD
+AuthorSchema.virtual("formatDOD").get(function () {
+  if (isNaN(this.date_of_death)) {
+    return "";
+  }
+
+  return DateTime.fromJSDate(this.date_of_death).toLocaleString(
+    DateTime.DATE_MED
+  );
 });
 
 // Export model
