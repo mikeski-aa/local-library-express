@@ -29,7 +29,21 @@ AuthorSchema.virtual("url").get(function () {
 });
 
 AuthorSchema.virtual("lifespan").get(function () {
-  return this.date_of_birth;
+  let dob = new Date(this.date_of_birth);
+  let dod = new Date(this.date_of_death);
+
+  if (isNaN(dob) && isNaN(dod)) {
+    return "Age information not found";
+  }
+
+  if (isNaN(dod)) {
+    dod = new Date();
+  }
+
+  const diffInMs = Math.abs(dod - dob);
+  const yearsDiff = Math.round(diffInMs / (1000 * 60 * 60 * 24 * 365.25));
+
+  return yearsDiff;
 });
 
 // Export model
