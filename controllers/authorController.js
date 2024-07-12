@@ -1,12 +1,12 @@
 const Author = require("../models/author");
 const asyncHandler = require("express-async-handler");
 
-// Display list of all authors
+// Display list of all Authors.
 exports.author_list = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: Author list");
 });
 
-// Display detail page for a specific Author
+// Display detail page for a specific Author.
 exports.author_detail = asyncHandler(async (req, res, next) => {
   res.send(`NOT IMPLEMENTED: Author detail: ${req.params.id}`);
 });
