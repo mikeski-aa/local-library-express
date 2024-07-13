@@ -14,8 +14,7 @@ var app = express();
 const mongoose = require("mongoose");
 const { mainModule } = require("process");
 mongoose.set("strictQuery", false);
-const mongoDB =
-  "mongodb+srv://admin:Thermaltake1@cluster0.jgmw3ft.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoDB = "";
 
 main().catch((err) => console.log(err));
 async function main() {
