@@ -28,7 +28,7 @@ exports.bookinstance_detail = asyncHandler(async (req, res, next) => {
   }
 
   res.render("bookinstance_detail", {
-    titl: "Book:",
+    title: "Book:",
     bookinstance: bookInstance,
   });
 });
@@ -90,12 +90,21 @@ exports.bookinstance_create_post = [
 
 // Display BookInstance delete form on GET.
 exports.bookinstance_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: BookInstance delete GET");
+  // show details of this particular instance
+  const bookInstance = await BookInstance.findById(req.params.id)
+    .populate("book")
+    .exec();
+
+  res.render("bookinstance_delete", {
+    title: "Delete BookInstance",
+    bookinstance: bookInstance,
+  });
 });
 
 // Handle BookInstance delete on POST.
 exports.bookinstance_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: BookInstance delete POST");
+  await BookInstance.findByIdAndDelete(req.params.id);
+  res.redirect("/catalog/bookinstances");
 });
 
 // Display BookInstance update form on GET.
