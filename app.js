@@ -7,7 +7,7 @@ var logger = require("morgan");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const catalogRouter = require("./routes/catalog");
-const compression = require("comperssion");
+const compression = require("compression");
 const helmet = require("helmet");
 
 // rate limiter for maximum of 20 requests per minute
