@@ -7,12 +7,18 @@
     "devstart": "nodemon ./bin/www",
     "serverstart": "DEBUG=express-locallibrary-tutorial:* npm run devstart"
   },
+  "engines": {
+    "node": ">20.15.0"
+  },
   "dependencies": {
+    "compression": "^1.7.4",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "^4.19.2",
     "express-async-handler": "^1.2.0",
+    "express-rate-limit": "^7.3.1",
     "express-validator": "^7.1.0",
+    "helmet": "^7.1.0",
     "http-errors": "~1.6.3",
     "luxon": "^3.4.4",
     "mongoose": "^8.5.0",

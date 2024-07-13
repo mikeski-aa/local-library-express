@@ -7,6 +7,15 @@ var logger = require("morgan");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const catalogRouter = require("./routes/catalog");
+const compression = require("comperssion");
+const helmet = require("helmet");
+
+// rate limiter for maximum of 20 requests per minute
+const RateLimit = require("express-rate-limit");
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, /// 1 minute
+  max: 20,
+});
 
 var app = express();
 
@@ -14,7 +23,9 @@ var app = express();
 const mongoose = require("mongoose");
 const { mainModule } = require("process");
 mongoose.set("strictQuery", false);
-const mongoDB = "";
+const dev_db_url =
+  "mongodb+srv://admin:Thermaltake1@cluster0.jgmw3ft.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoDB = process.env.MONGODB_URI || dev_db_url;
 
 main().catch((err) => console.log(err));
 async function main() {
@@ -25,6 +36,15 @@ async function main() {
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
+app.use(limiter);
+app.use(compression());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      script_src: ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
+    },
+  })
+);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
