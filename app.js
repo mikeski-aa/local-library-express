@@ -35,13 +35,13 @@ async function main() {
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
-
-app.use(limiter);
 app.use(compression());
+app.use(limiter);
+
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      script_src: ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
+      "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
     },
   })
 );
