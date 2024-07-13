@@ -136,10 +136,76 @@ exports.author_delete_post = asyncHandler(async (req, res, next) => {
 
 // Display Author update form on GET.
 exports.author_update_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Author update GET");
+  const [author, allBooksByAuthor] = await Promise.all([
+    Author.findById(req.params.id).exec(),
+    Book.find({ author: req.params.id }).sort({ title: 1 }).exec(),
+  ]);
+
+  if (author === null) {
+    // author not present, redirect back to authors
+    res.redirect("/catalog/authors");
+  }
+  console.log(author.date_of_birth);
+  res.render("author_form", {
+    title: "Update Author",
+    author: author,
+  });
 });
 
 // Handle Author update on POST.
-exports.author_update_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Author update POST");
-});
+exports.author_update_post = [
+  // validate and sanitize the data
+  body("first_name")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("First name must be specified.")
+    .isAlphanumeric()
+    .withMessage("First name has non-alphanumeric characters"),
+  body("family_name")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("First name must be specified.")
+    .isAlphanumeric()
+    .withMessage("First name has non-alphanumeric characters"),
+  body("date_of_birth", "Invalid date of birth")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+  body("date_of_death", "Invalid date of death")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+
+  // process sanitised data
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const newAuthor = new Author({
+      first_name: req.body.first_name,
+      family_name: req.body.family_name,
+      date_of_birth: req.body.date_of_birth,
+      date_of_death: req.body.date_of_death,
+      _id: req.params.id,
+    });
+
+    // handle error
+    if (!errors.isEmpty()) {
+      res.render("author_form", {
+        title: "Update Author",
+        author: author,
+        author_books: allBooksByAuthor,
+        errors: errors.array(),
+      });
+    } else {
+      // handle update
+      const updatedAuthor = await Author.findByIdAndUpdate(
+        newAuthor._id,
+        newAuthor,
+        {}
+      );
+      res.redirect(updatedAuthor.url);
+    }
+  }),
+];
